@@ -1,0 +1,2 @@
+#define LatStat_VERSION_MAJOR @LatStat_VERSION_MAJOR@
+#define LatStat_VERSION_MINOR @LatStat_VERSION_MINOR@

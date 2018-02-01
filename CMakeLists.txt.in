@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 2.8.2)
+
+project(cubature-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(cubature
+  GIT_REPOSITORY    https://github.com/stevengj/cubature.git
+  GIT_TAG           master
+  SOURCE_DIR        "${CMAKE_BINARY_DIR}/cubature-src"
+  BINARY_DIR        "${CMAKE_BINARY_DIR}/cubature-build"
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+)

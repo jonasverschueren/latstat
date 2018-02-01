@@ -1,0 +1,6 @@
+- change Eigen operations to column-major
+	Currently most loops are row-major increasing the probabilty of chache misses
+- set mass units to AU everywhere, set THz units as optional
+- provide interface to PerfectCrystal with only setfl file, ie some sort of constructor PerfectCrystal(setfl_file)
+	-> mostly done but still have to read lattice constant and mass from parameter file.
+	-> make reading in algorithm in EamSetfl more robust to unexpected whitespace
