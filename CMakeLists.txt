@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.4.2)
 project (LatStat)
 
 # Version
-set (LatStat_VERSION_MAJOR 0)
+set (LatStat_VERSION_MAJOR 1)
 set (LatStat_VERSION_MINOR 0)
 
 # Download cubature
