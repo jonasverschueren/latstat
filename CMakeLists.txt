@@ -24,7 +24,6 @@ add_subdirectory(${CMAKE_BINARY_DIR}/cubature-src
 	${CMAKE_BINARY_DIR}/cubature-build
                  EXCLUDE_FROM_ALL)
 
-
 configure_file (
 	"${PROJECT_SOURCE_DIR}/LatStatConfig.h.in"
 	"${PROJECT_BINARY_DIR}/LatStatConfig.h"
@@ -43,6 +42,8 @@ add_subdirectory (src)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O2")
 
 add_executable(ex_main.exe ${PROJECT_SOURCE_DIR}/ex_main.cpp)
+set_property(TARGET ex_main.exe PROPERTY CXX_STANDARD 11)
+set_property(TARGET ex_main.exe PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries( ex_main.exe
 		m
 		latstat

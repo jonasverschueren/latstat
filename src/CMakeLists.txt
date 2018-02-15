@@ -2,11 +2,10 @@ include_directories (
 	"${PROJECT_SOURCE_DIR}/include"
 	"${PROJECT_SOURCE_DIR}/thirdparty/eigen3.3.4"
 )
-
 file(GLOB SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp")
-
-add_library (latstat ${SRC_FILES})
-
+add_library(latstat ${SRC_FILES})
+set_property(TARGET latstat PROPERTY CXX_STANDARD 11)
+set_property(TARGET latstat PROPERTY CXX_STANDARD_REQUIRED ON)
 find_package(OpenMP)
 if (OPENMP_FOUND)
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -O2")

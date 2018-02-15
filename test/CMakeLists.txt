@@ -33,6 +33,8 @@ include_directories (
 )
 
 add_executable(test_suite.exe ${PROJECT_SOURCE_DIR}/test/test_suite.cpp)
+set_property(TARGET test_suite.exe PROPERTY CXX_STANDARD 11)
+set_property(TARGET test_suite.exe PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_link_libraries(test_suite.exe 
 	m
