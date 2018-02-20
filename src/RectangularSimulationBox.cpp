@@ -1,5 +1,7 @@
 #include"RectangularSimulationBox.h"
 
+static Eigen::Vector3d FileLine2Vector3d(std::string& fileLine);
+
 RectangularSimulationBox::RectangularSimulationBox(){
 	this->boxLengths=std::vector<double>(3);
 	this->simulationParticles=std::vector<Eigen::Vector3d>(0);
@@ -114,4 +116,50 @@ void RectangularSimulationBox::EvaluateNeighbourLists(double cutoff){
 
 void RectangularSimulationBox::MoveParticleByAmount(int pid, int dim, double amount){
 	this->simulationParticles.at(pid)(dim)+=amount;
+}
+
+void RectangularSimulationBox::DumpToXYZFile(const char* fname){
+	// XYZ-file format as laid out in LAMMPS documentation is used here with one change: the comment line will be used for the periodic box lengths
+	// no. atoms
+	// box lengths
+	// atom type x y z
+	// ...
+	std::ofstream dumpFile;
+	dumpFile.open(fname);
+	dumpFile<<std::fixed<<std::setprecision(16);
+	// write boxLengths
+	dumpFile<<this->boxLengths.at(0)<<"\t"<<boxLengths.at(1)<<"\t"<<boxLengths.at(2)<<std::endl;
+	// write positions
+	for (Eigen::Vector3d p1 : this->simulationParticles){
+		dumpFile<<p1(0)<<"\t"<<p1(1)<<"\t"<<p1(2)<<std::endl;
+	}
+	dumpFile.close();
+}
+
+void RectangularSimulationBox::ReadFromDump(const char* fname, RectangularSimulationBox* simBox){
+	std::ifstream inputFileStream(fname);
+	std::string fileLine;
+	// Read in box lengths
+	std::getline(inputFileStream, fileLine);
+	Eigen::Vector3d boxLengthsVect = FileLine2Vector3d(fileLine);
+	for (int i = 0; i<=2; i++)
+		simBox->boxLengths.at(i) = boxLengthsVect(i);
+	// Read in positions
+	simBox->simulationParticles.clear();
+	while (!inputFileStream.eof()){
+		std::getline(inputFileStream, fileLine);
+		simBox->simulationParticles.push_back(FileLine2Vector3d(fileLine));
+	}
+	inputFileStream.close();
+}
+
+static Eigen::Vector3d FileLine2Vector3d(std::string& fileLine){
+	std::istringstream lineStream(fileLine);
+	std::string posString;
+	Eigen::Vector3d vect;
+	for (int i = 0; i <=2; i++){
+		std::getline(lineStream, posString, '\t' );
+		vect(i) = std::stod(posString);
+	}
+	return vect;
 }
