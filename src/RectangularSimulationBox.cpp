@@ -1,6 +1,6 @@
 #include"RectangularSimulationBox.h"
 
-static Eigen::Vector3d FileLine2Vector3d(std::string& fileLine);
+static Eigen::Vector3d XYZFileLine2Pos3dVector(std::string& fileLine, bool skipFirstColumn);
 
 RectangularSimulationBox::RectangularSimulationBox(){
 	this->boxLengths=std::vector<double>(3);
@@ -132,8 +132,9 @@ void RectangularSimulationBox::DumpToXYZFile(const char* fname){
 	dumpFile<<std::fixed<<std::setprecision(16);
 	dumpFile<<this->boxLengths.at(0)<<"\t"<<boxLengths.at(1)<<"\t"<<boxLengths.at(2)<<std::endl;
 	// write positions
+	int atom_type = 1;																	// only mono-atomic crystals are implemented for now
 	for (Eigen::Vector3d p1 : this->simulationParticles){
-		dumpFile<<p1(0)<<"\t"<<p1(1)<<"\t"<<p1(2)<<std::endl;
+		dumpFile<<atom_type<<"\t"<<p1(0)<<"\t"<<p1(1)<<"\t"<<p1(2)<<std::endl;
 	}
 	dumpFile.close();
 }
@@ -146,13 +147,13 @@ int RectangularSimulationBox::ReadFromXYZDump(const char* fname, RectangularSimu
 	int no_of_atoms = std::stoi(fileLine);
 	// Read in box lengths
 	std::getline(inputFileStream, fileLine);
-	Eigen::Vector3d boxLengthsVect = FileLine2Vector3d(fileLine);
+	Eigen::Vector3d boxLengthsVect = XYZFileLine2Pos3dVector(fileLine, false);
 	for (int i = 0; i<=2; i++)
 		simBox.boxLengths.at(i) = boxLengthsVect(i);
 	// Read in positions
 	simBox.simulationParticles.clear();
 	for (std::getline(inputFileStream, fileLine); !inputFileStream.eof(); std::getline(inputFileStream, fileLine))
-		simBox.simulationParticles.push_back(FileLine2Vector3d(fileLine));
+		simBox.simulationParticles.push_back(XYZFileLine2Pos3dVector(fileLine, true));
 	inputFileStream.close();
 	int simBox_no_of_atoms = simBox.GetNumberOfSimulationParticles();
 	if (simBox_no_of_atoms!= no_of_atoms)
@@ -160,9 +161,11 @@ int RectangularSimulationBox::ReadFromXYZDump(const char* fname, RectangularSimu
 	return simBox_no_of_atoms;
 }
 
-static Eigen::Vector3d FileLine2Vector3d(std::string& fileLine){
+static Eigen::Vector3d XYZFileLine2Pos3dVector(std::string& fileLine, bool skipFirstColumn){
 	std::istringstream lineStream(fileLine);
 	std::string posString;
+	if (skipFirstColumn)
+		std::getline(lineStream, posString, '\t' );
 	Eigen::Vector3d vect;
 	for (int i = 0; i <=2; i++){
 		std::getline(lineStream, posString, '\t' );
