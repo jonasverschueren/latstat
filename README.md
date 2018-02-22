@@ -3,7 +3,7 @@
 Calculate phonon dispersion curves from molecular dynamics potential files.
 
 ## Requirements
-A C++ compiler with C++11 support and a version of CMake no less than 3.4.2. Earlier versions of CMake 3.x.x are expected to work as well but have not been tested. 
+A C++ compiler with C++11 support and a version of CMake no less than 3.2.2. Earlier versions of CMake 3.x.x are expected to work as well but have not been tested. 
 
 ## Download & get started
 - Clone this git repository and additional software (googletest and cubature) should download during the build process. 
