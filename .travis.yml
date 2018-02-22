@@ -1,19 +1,15 @@
-sudo: false
 language: cpp
-compiler:
-- gcc
+compiler: gcc
 addons:
-	apt:
-		sources:
-		- ubuntu-toolchain-r-test
-		packages:
-		- g++-6
+ apt:
+  sources:
+   - ubuntu-toolchain-r-test
+  packages:
+   - g++-6
 install:
-- "[ $CXX = g++ ] && export CXX=g++-6 || true" 
+ - "[ $CXX = g++ ] && export CXX=g++-6 || true" 
 script:
-- gcc -v && g++ -v && cmake --version
-- mkdir build
-- cd build
-- cmake .. && make
-after_failure:
-- gcc -v && g++ -v && cmake --version
+ - gcc -v && g++ -v && cmake --version
+ - mkdir build
+ - cd build
+ - cmake .. && make
