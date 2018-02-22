@@ -1,4 +1,5 @@
-# latstat
+# latstat [![Build Status](https://travis-ci.org/jonasverschueren/latstat.svg?branch=master)](https://travis-ci.org/jonasverschueren/latstat)
+
 Calculate phonon dispersion curves from molecular dynamics potential files.
 
 ## Requirements
