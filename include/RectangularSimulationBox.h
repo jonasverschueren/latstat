@@ -2,6 +2,9 @@
 
 #include<vector>
 #include<memory>
+#include<fstream>
+#include<iomanip>
+#include<sstream>
 #include"Eigen/Dense"
 #include"RectangularUnitCell.h"
 
@@ -27,4 +30,6 @@ class RectangularSimulationBox{
 		void EvaluateNeighbourLists(double cutoff);
 		std::vector<std::vector<int>>& GetNeighbourListsReference();
 		void MoveParticleByAmount(int pid, int dim, double amount);
+		void DumpToXYZFile(const char* fname);
+		static int ReadFromXYZDump(const char* fname, RectangularSimulationBox& simBox);				// returns number of particles read in
 };

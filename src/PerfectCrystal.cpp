@@ -5,7 +5,7 @@ PerfectCrystal::PerfectCrystal(){
 	;
 }
 
-PerfectCrystal::PerfectCrystal(std::shared_ptr<RectangularUnitCell> read_rectangularUnitCell, std::shared_ptr<Interactions> read_interactions): ptr_rectangularUnitCell(read_rectangularUnitCell), ptr_interactions(read_interactions){
+PerfectCrystal::PerfectCrystal(std::shared_ptr<RectangularUnitCell> read_rectangularUnitCell, std::shared_ptr<Interactions> read_interactions): Crystal(read_interactions), ptr_rectangularUnitCell(read_rectangularUnitCell){
 	this->EvaluateForceConstantsIfNecessary();
 }
 
@@ -87,8 +87,4 @@ double PerfectCrystal::CheckIfAsrIsObeyed(){
 	if (allZero)
 		std::cout<<"WARNING: All force constants are 0."<<std::endl;
 	return sum;
-}
-
-double PerfectCrystal::GetMass(){
-	return ptr_interactions->GetMass();
 }

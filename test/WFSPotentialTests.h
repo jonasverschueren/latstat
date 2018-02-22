@@ -6,6 +6,7 @@
 #include"BccUnitCell.h"
 #include"RectangularSimulationBox.h"
 #include"PerfectCrystal.h"
+#include"ImperfectCrystal.h"
 #include "Eigen/Dense"
 
 class WPotentialTests : public ::testing::Test{
@@ -17,7 +18,6 @@ class WPotentialTests : public ::testing::Test{
 		static std::unique_ptr<PerfectCrystal> rotatedTungstenCrystal;
 		static void SetUpTestCase(){
 			double latConst=3.1652;
-			double tungstenMass=183.84;
 			std::string fsParamsFile ="W87.eam.fs";
 			interactions = std::shared_ptr<Interactions>(FsInteractions::Create(fsParamsFile).release());
 			unitCell = std::shared_ptr<RectangularUnitCell>(BccUnitCell::Create(latConst).release());
@@ -69,4 +69,12 @@ TEST_F (WPotentialTests, DispersionZeroAtBZBoundaries){
 	for(int i=0; i<freqs.size(); i++){
 		EXPECT_NEAR(freqs[i], 0, 1e-12);
 	}
+}
+
+TEST_F (WPotentialTests, DumpAndReadXYZFile){
+	double bindingEnergyBefore = rotatedTungstenCrystal->EvaluatePotentialEnergyPerAtom();
+	const char* dump_fname = "wPotentialTests_xyzdump.txt";
+	rotatedTungstenCrystal->forceConstantsSimulationBox.DumpToXYZFile(dump_fname);
+	ImperfectCrystal tungstenReadIn(dump_fname, interactions);
+	EXPECT_FLOAT_EQ(tungstenReadIn.EvaluateTotalPotentialEnergy()/tungstenReadIn.simBox.GetNumberOfSimulationParticles(), bindingEnergyBefore);
 }
