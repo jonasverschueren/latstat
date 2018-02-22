@@ -16,7 +16,6 @@ class RectangularSimulationBox{
 		void SetBoxLengths(std::shared_ptr<RectangularUnitCell>, std::vector<int> numberOfUnitCellsPerDirection);
 	public:
 		RectangularSimulationBox();
-		std::vector<double> kanzakiForces;
 		Eigen::Vector3d CalculatePeriodicDistanceVector(Eigen::Vector3d v1, Eigen::Vector3d v2);		// v1-v2
 		double CalculatePeriodicDistanceMagnitude(Eigen::Vector3d v1, Eigen::Vector3d v2 );
 		std::vector<Eigen::Vector3d>& GetSimulationParticlesReference();
