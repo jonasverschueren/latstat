@@ -126,8 +126,10 @@ void RectangularSimulationBox::DumpToXYZFile(const char* fname){
 	// ...
 	std::ofstream dumpFile;
 	dumpFile.open(fname);
-	dumpFile<<std::fixed<<std::setprecision(16);
+	// write number of atoms
+	dumpFile<<this->simulationParticles.size()<<std::endl;
 	// write boxLengths
+	dumpFile<<std::fixed<<std::setprecision(16);
 	dumpFile<<this->boxLengths.at(0)<<"\t"<<boxLengths.at(1)<<"\t"<<boxLengths.at(2)<<std::endl;
 	// write positions
 	for (Eigen::Vector3d p1 : this->simulationParticles){
@@ -136,21 +138,26 @@ void RectangularSimulationBox::DumpToXYZFile(const char* fname){
 	dumpFile.close();
 }
 
-void RectangularSimulationBox::ReadFromDump(const char* fname, RectangularSimulationBox* simBox){
+int RectangularSimulationBox::ReadFromXYZDump(const char* fname, RectangularSimulationBox& simBox){
 	std::ifstream inputFileStream(fname);
 	std::string fileLine;
+	// read in no. of atoms
+	std::getline(inputFileStream, fileLine);
+	int no_of_atoms = std::stoi(fileLine);
 	// Read in box lengths
 	std::getline(inputFileStream, fileLine);
 	Eigen::Vector3d boxLengthsVect = FileLine2Vector3d(fileLine);
 	for (int i = 0; i<=2; i++)
-		simBox->boxLengths.at(i) = boxLengthsVect(i);
+		simBox.boxLengths.at(i) = boxLengthsVect(i);
 	// Read in positions
-	simBox->simulationParticles.clear();
-	while (!inputFileStream.eof()){
-		std::getline(inputFileStream, fileLine);
-		simBox->simulationParticles.push_back(FileLine2Vector3d(fileLine));
-	}
+	simBox.simulationParticles.clear();
+	for (std::getline(inputFileStream, fileLine); !inputFileStream.eof(); std::getline(inputFileStream, fileLine))
+		simBox.simulationParticles.push_back(FileLine2Vector3d(fileLine));
 	inputFileStream.close();
+	int simBox_no_of_atoms = simBox.GetNumberOfSimulationParticles();
+	if (simBox_no_of_atoms!= no_of_atoms)
+		std::cout<<"WARNING: number of particles read in is not equal to the number present in the original dump."<<std::endl;
+	return simBox_no_of_atoms;
 }
 
 static Eigen::Vector3d FileLine2Vector3d(std::string& fileLine){

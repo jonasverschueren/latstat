@@ -31,6 +31,6 @@ class RectangularSimulationBox{
 		void EvaluateNeighbourLists(double cutoff);
 		std::vector<std::vector<int>>& GetNeighbourListsReference();
 		void MoveParticleByAmount(int pid, int dim, double amount);
-		void DumpToFile(const char* fname);
-		void ReadFromDump(const char* fname, RectangularSimulationBox* simBox);
+		void DumpToXYZFile(const char* fname);
+		static int ReadFromXYZDump(const char* fname, RectangularSimulationBox& simBox);				// returns number of particles read in
 };

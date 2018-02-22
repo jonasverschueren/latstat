@@ -6,6 +6,7 @@
 #include"BccUnitCell.h"
 #include"RectangularSimulationBox.h"
 #include"PerfectCrystal.h"
+#include"ImperfectCrystal.h"
 #include "Eigen/Dense"
 
 class WPotentialTests : public ::testing::Test{
@@ -70,9 +71,10 @@ TEST_F (WPotentialTests, DispersionZeroAtBZBoundaries){
 	}
 }
 
-TEST_F (WPotentialTests, DumpToFile){
+TEST_F (WPotentialTests, DumpAndReadXYZFile){
 	double bindingEnergyBefore = rotatedTungstenCrystal->EvaluatePotentialEnergyPerAtom();
-	const char* dump_fname = "wPotentialTests_dumpfile.txt";
-	rotatedTungstenCrystal->forceConstantsSimulationBox.DumpToFile(dump_fname);
-	
+	const char* dump_fname = "wPotentialTests_xyzdump.txt";
+	rotatedTungstenCrystal->forceConstantsSimulationBox.DumpToXYZFile(dump_fname);
+	ImperfectCrystal tungstenReadIn(dump_fname, interactions);
+	EXPECT_FLOAT_EQ(tungstenReadIn.EvaluateTotalPotentialEnergy()/tungstenReadIn.simBox.GetNumberOfSimulationParticles(), bindingEnergyBefore);
 }
